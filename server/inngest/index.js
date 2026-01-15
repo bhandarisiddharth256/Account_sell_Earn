@@ -4,7 +4,7 @@ import prisma from "../configs/prisma.js";
 // Create Inngest client
 export const inngest = new Inngest({ id: "ACCOUNT_SELL_EARN" });
 
-// ✅ User created
+// ✅ User Created
 const SyncUserCreation = inngest.createFunction(
   { id: "sync-user-from-clerk" },
   { event: "clerk/user.created" },
@@ -29,7 +29,6 @@ const SyncUserCreation = inngest.createFunction(
       });
       return;
     }
-
     await prisma.user.create({ data: userData });
   }
 );
