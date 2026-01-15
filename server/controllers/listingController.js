@@ -5,7 +5,7 @@ import fs from "fs";
 //controller for adding listing to database
 export const addListing = async (req, res) => {
   try {
-    const { userId } = await req.auth();
+    const { userId } = req.auth();
 
     if (req.plan !== "premium") {
       const listingCount = await prisma.listing.count({
@@ -33,7 +33,7 @@ export const addListing = async (req, res) => {
       : null;
 
     const uploadImages = req.files.map(async (file) => {
-      const response = await imagekit.files.upload({
+      const response = await imagekit.upload({
         file: fs.createReadStream(file.path),
         fileName: `${Date.now()}.png`,
         folder: "flip-earn",
@@ -153,7 +153,7 @@ export const updateListing = async (req, res) => {
     if(req.files.length > 0){
 
         const uploadImages = req.files.map(async (file) => {
-        const response = await imagekit.files.upload({
+        const response = await imagekit.upload({
             file: fs.createReadStream(file.path),
             fileName: `${Date.now()}.png`,
             folder: "flip-earn",
@@ -171,7 +171,7 @@ export const updateListing = async (req, res) => {
             data:{
                 ownerId:userId,
                 ...accountDetails,
-                images:[...accountDetails.image , ...images]
+                images:[...accountDetails.images , ...images]
             }
         })
 
@@ -189,7 +189,7 @@ export const updateListing = async (req, res) => {
 export const togglestatus = async (req,res)=>{
     try {
          const {id} = req.params;  //id for the listing
-         const {userId} = await req.auth();
+         const {userId} = req.auth();
 
          const listing = await prisma.listing.findUnique({
            where:{id,ownerId:userId},
@@ -222,7 +222,7 @@ export const togglestatus = async (req,res)=>{
 export const deleteUserListing = async(req,res) => {
      try {
         const {listingid} = req.params;  //id for the listing
-        const {userId} = await req.auth();
+        const {userId} = req.auth();
 
         const listing = await prisma.listing.findFirst({
             where:{id:listingid , ownerId:userId},
@@ -321,7 +321,7 @@ export const markFeatured = async(req,res)=>{
 
 export const getAllUserOrders = async(req,res)=>{
     try {
-        const {userId} = await req.auth();
+        const {userId} = req.auth();
         let orders = await prisma.transaction.findMany({
             where:{userId , isPaid:true},
             include:{listing:true},
