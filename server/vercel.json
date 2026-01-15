@@ -7,6 +7,9 @@
       "config": {
         "includeFiles": [
           "configs/**",
+          "controllers/**",
+          "routes/**",
+          "middlewares/**",
           "inngest/**",
           "prisma/**"
         ]
